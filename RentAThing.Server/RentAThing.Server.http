@@ -1,0 +1,6 @@
+@RentAThing.Server_HostAddress = http://localhost:5028
+
+GET {{RentAThing.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
