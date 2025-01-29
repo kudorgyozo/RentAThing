@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RentAThing.Server.Application.Exceptions;
 using RentAThing.Server.Infrastructure;
+using RentAThing.Server.Models;
 
 namespace RentAThing.Server.Application.Handlers.Commands; 
 
@@ -18,6 +19,11 @@ public class StartRentCommandHandler(AppDbContext context) : IRequestHandler<Sta
         }
         item.RenterId = request.UserId;
         item.RentStart = DateTime.UtcNow;
+        context.RentHistory.Add(new RentHistory {
+            ItemId = item.Id,
+            RenterId = request.UserId,
+            RentStart = item.RentStart.Value
+        });
         await context.SaveChangesAsync(cancellationToken);
 
     }

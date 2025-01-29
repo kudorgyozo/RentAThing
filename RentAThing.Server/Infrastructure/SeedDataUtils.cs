@@ -14,20 +14,27 @@ namespace RentAThing.Server.Infrastructure {
                 ]);
 
             dbContext.Cars.AddRange([
-                    new Car { Id = 1, Name = "Car 1", Make = "Make 1", Model = "Model 1", Year = 2010, PricePerHour = 10 },
-                    new Car { Id = 2, Name = "Car 2", Make = "Make 2", Model = "Model 2", Year = 2015, PricePerHour = 15 },
-                    new Car { Id = 3, Name = "Car 3", Make = "Make 3", Model = "Model 3", Year = 2020, PricePerHour = 20, RenterId = 1, RentStart = DateTime.UtcNow }
+                    new Car {Type = "Car", Id = 1, Name = "Car 1", Make = "Make 1", Model = "Model 1", Year = 2010, PricePerHour = 10 },
+                    new Car {Type = "Car", Id = 2, Name = "Car 2", Make = "Make 2", Model = "Model 2", Year = 2015, PricePerHour = 15 },
+                    new Car {Type = "Car", Id = 3, Name = "Car 3", Make = "Make 3", Model = "Model 3", Year = 2020, PricePerHour = 20 }
                 ]);
             dbContext.Bikes.AddRange([
-                    new Bike { Id = 4, Name = "Bike 1", Type = "Mountain", PricePerHour = 5 },
-                    new Bike { Id = 5, Name = "Bike 2", Type = "Road", PricePerHour = 6 },
-                    new Bike { Id = 6, Name = "Bike 3", Type = "Hybrid", PricePerHour = 7 }
+                    new Bike {Type = "Bike", Id = 4, Name = "Bike 1", BikeType = "Mountain", PricePerHour = 5 },
+                    new Bike {Type = "Bike", Id = 5, Name = "Bike 2", BikeType = "Road", PricePerHour = 6 },
+                    new Bike {Type = "Bike", Id = 6, Name = "Bike 3", BikeType = "Hybrid", PricePerHour = 7 }
                 ]);
             dbContext.ElectricScooters.AddRange([
-                    new ElectricScooter { Id = 7, Name = "Scooter 1", Range = 25, PricePerHour = 8 },
-                    new ElectricScooter { Id = 8, Name = "Scooter 2", Range = 50, PricePerHour = 9 },
-                    new ElectricScooter { Id = 9, Name = "Scooter 3", Range = 75, PricePerHour = 10 }
+                    new ElectricScooter {Type = "ElectricScooter", Id = 7, Name = "Scooter 1", Range = 25, PricePerHour = 8 },
+                    new ElectricScooter {Type = "ElectricScooter", Id = 8, Name = "Scooter 2", Range = 50, PricePerHour = 9 },
+                    new ElectricScooter {Type = "ElectricScooter", Id = 9, Name = "Scooter 3", Range = 75, PricePerHour = 10 }
                 ]);
+
+            dbContext.RentHistory.Add(new RentHistory {
+                ItemId = 1,
+                RenterId = 1,
+                RentStart = new DateTime(2021, 1, 1, 10, 0, 0),
+                RentEnd = new DateTime(2021, 1, 1, 12, 0, 0)
+            });
             dbContext.SaveChanges();
         }
 

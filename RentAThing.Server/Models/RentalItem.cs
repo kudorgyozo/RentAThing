@@ -6,11 +6,17 @@ public abstract class RentalItem {
 
     public decimal PricePerHour { get; set; }
 
+    public required string Type { get; set; }
+
     public int? RenterId { get; set; }
 
     public User? Renter { get; set; }
 
     public DateTime? RentStart { get; set; }
+
+    public ICollection<RentHistory> History { get; set; } = new List<RentHistory>();
+
+
 }
 
 public class Car : RentalItem {
@@ -24,7 +30,7 @@ public class Car : RentalItem {
 }
 
 public class Bike : RentalItem {
-    public required string Type { get; set; } // e.g., Mountain, Road
+    public required string BikeType { get; set; } // e.g., Mountain, Road
 }
 
 public class ElectricScooter : RentalItem {

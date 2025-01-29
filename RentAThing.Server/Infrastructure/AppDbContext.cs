@@ -14,6 +14,8 @@ public class AppDbContext : DbContext {
 
     public DbSet<User> Users { get; set; }
 
+    public DbSet<RentHistory> RentHistory { get; set; }
+
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) {
     }
@@ -28,6 +30,12 @@ public class AppDbContext : DbContext {
         //    .HasOne(ri => ri.Renter)
         //    .WithMany(u => u.RentalItems)
         //    .HasForeignKey(ri => ri.RenterId);
+
+        modelBuilder.Entity<RentalItem>()
+            .HasDiscriminator<string>("Type")
+            .HasValue<Car>("Car")
+            .HasValue<Bike>("Bike")
+            .HasValue<ElectricScooter>("ElectricScooter");
 
         modelBuilder.Entity<User>()
             .HasMany(u => u.RentalItems)

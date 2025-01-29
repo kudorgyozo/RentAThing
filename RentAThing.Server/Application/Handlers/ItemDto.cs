@@ -12,5 +12,7 @@ namespace RentAThing.Server.Application.Handlers {
 
         public DateTime? RentStart { get; set; }
 
+        public required string Type { get; set; }
+
     }
 }

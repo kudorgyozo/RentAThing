@@ -13,6 +13,10 @@ public class StopRentCommandHandler(AppDbContext context) : IRequestHandler<Stop
         var item = await context.RentalItems.FirstAsync(i => i.Id == request.ItemId && i.RenterId == request.UserId, cancellationToken);
         item.RenterId = null;
         item.RentStart = null;
+
+        var history = context.RentHistory.First(h => h.RenterId == request.UserId && h.ItemId == request.ItemId);
+        history.RentEnd = DateTime.UtcNow;
+
         await context.SaveChangesAsync(cancellationToken);
     }
 
