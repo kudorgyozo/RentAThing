@@ -12,4 +12,7 @@ export class HeaderComponent {
 
     authService = inject(AuthService);
 
+    onLogout() {
+        this.authService.logout();
+    }
 }

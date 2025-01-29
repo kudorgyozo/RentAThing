@@ -1,6 +1,6 @@
 <header class="sticky bg-white shadow-md z-50 top-0">
     <nav class="container mx-auto p-4 flex justify-start items-center">
-        <h1 class="text-xl font-bold">My Website</h1>
+        <h1 class="text-xl font-bold">RentAThing</h1>
         <ul class="flex space-x-6 ml-auto mr-8">
             <li>
                 <a
@@ -11,24 +11,27 @@
                 >
             </li>
             <li>
-                <a
-                    routerLink="rent"
-                    routerLinkActive="text-blue-500"
-                    class="hover:text-blue-500"
-                    >Rent</a
-                >
-            </li>
-            <li>
+                @if (!authService.username()) {
                 <a
                     routerLink="login"
                     routerLinkActive="text-blue-500"
                     class="hover:text-blue-500"
                     >Login</a
                 >
+                }
             </li>
         </ul>
-        <div class="text-gray-700 font-medium">
+        <div class="flex items-center text-gray-700 font-medium">
             Welcome, {{ authService.username() || "Guest" }}
+            @if (authService.username()) {
+            <button
+                type="button"
+                (click)="onLogout()"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-md focus:outline-none block px-3 py-1 ml-4"
+            >
+                Logout
+            </button>
+            }
         </div>
     </nav>
 </header>

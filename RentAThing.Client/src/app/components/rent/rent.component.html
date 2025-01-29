@@ -1,0 +1,36 @@
+<ul class="space-y-4">
+    @for (item of items(); track item.id) {
+    <li
+        class="bg-gray-100 p-4 rounded-lg shadow-md flex justify-between items-center"
+    >
+        <div class="flex-grow">
+            <p class="font-semibold text-gray-800">name: {{ item.name }}</p>
+            <p>price per hour: {{ item.pricePerHour }}</p>
+            <p>start:{{ item.rentStart | date : "medium" }}</p>
+            <p>renter: {{ item.renter }}</p>
+            <p>type: {{ item.type }}</p>
+        </div>
+        <div class="space-x-2">
+            <button
+                [disabled]="!authService.username() || item.renter !== null"
+                type="button"
+                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition disabled:opacity-50"
+                (click)="startRent(item.id)"
+            >
+                Start
+            </button>
+            <button
+                [disabled]="
+                    !authService.username() ||
+                    item.renter !== authService.username()
+                "
+                type="button"
+                (click)="stopRent(item.id)"
+                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition disabled:opacity-50"
+            >
+                Stop
+            </button>
+        </div>
+    </li>
+    }
+</ul>
