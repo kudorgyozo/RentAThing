@@ -1,0 +1,34 @@
+<header class="sticky bg-white shadow-md z-50 top-0">
+    <nav class="container mx-auto p-4 flex justify-start items-center">
+        <h1 class="text-xl font-bold">My Website</h1>
+        <ul class="flex space-x-6 ml-auto mr-8">
+            <li>
+                <a
+                    routerLink="home"
+                    routerLinkActive="text-blue-500"
+                    class="hover:text-blue-500"
+                    >Home</a
+                >
+            </li>
+            <li>
+                <a
+                    routerLink="rent"
+                    routerLinkActive="text-blue-500"
+                    class="hover:text-blue-500"
+                    >Rent</a
+                >
+            </li>
+            <li>
+                <a
+                    routerLink="login"
+                    routerLinkActive="text-blue-500"
+                    class="hover:text-blue-500"
+                    >Login</a
+                >
+            </li>
+        </ul>
+        <div class="text-gray-700 font-medium">
+            Welcome, {{ authService.username() || "Guest" }}
+        </div>
+    </nav>
+</header>

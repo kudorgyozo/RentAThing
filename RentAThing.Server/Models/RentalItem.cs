@@ -1,5 +1,4 @@
-﻿namespace RentAThing.Server.Models;
-
+﻿namespace RentAThing.Server.Models; 
 public abstract class RentalItem {
     public int Id { get; set; }
 
@@ -10,12 +9,18 @@ public abstract class RentalItem {
     public int? RenterId { get; set; }
 
     public User? Renter { get; set; }
+
+    public DateTime? RentStart { get; set; }
 }
 
 public class Car : RentalItem {
+
     public required string Make { get; set; }
+
     public required string Model { get; set; }
+
     public int Year { get; set; }
+
 }
 
 public class Bike : RentalItem {
@@ -24,15 +29,4 @@ public class Bike : RentalItem {
 
 public class ElectricScooter : RentalItem {
     public int Range { get; set; }
-}
-
-public class User {
-
-    public int Id { get; set; }
-
-    public required string UserName { get; set; }
-
-    public required string Password { get; set; }
-
-    public ICollection<RentalItem> RentalItems { get; set; } = new List<RentalItem>();
 }

@@ -1,0 +1,32 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@apiUrl=https://localhost:57024/api
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzIiwibmFtZSI6InVzZXIxIiwianRpIjoiMzcwYWE1YzktNTAxMC00OWQyLTk4YmMtNmE0YzNmNmRiYjA5IiwiZXhwIjoxNzM4MzIzNzY2LCJpc3MiOiJZb3VySXNzdWVyIiwiYXVkIjoiWW91ckF1ZGllbmNlIn0.jjZXCPKUVWbXTqnIV3rGUqMj3I0m3hRN-_WZRxN4Xk4
+
+
+POST {{apiUrl}}/user/login
+Content-Type: application/json
+
+{
+    "username": "user1",
+    "password": "user1"
+}
+
+###
+
+GET {{apiUrl}}/rent
+
+###
+
+PUT {{apiUrl}}/rent/1/start
+Authorization: Bearer {{token}}
+
+###
+
+PUT {{apiUrl}}/rent/1/stop
+Authorization: Bearer {{token}}
+
+###
+
+
+
+###

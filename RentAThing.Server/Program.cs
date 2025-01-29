@@ -1,68 +1,82 @@
-using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using RentAThing.Server.Endpoints;
-using RentAThing.Server.Handlers.Queries;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Tokens;
+using RentAThing.Server.Application.Services;
 using RentAThing.Server.Infrastructure;
-using RentAThing.Server.Models;
-using System;
-using System.Reflection.Metadata;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+
+IdentityModelEventSource.ShowPII = true;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>(); // Add the global exception filter
+});
 builder.Services.AddOpenApi();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+        var key = builder.Configuration["Jwt:Key"]!;
+
+        options.TokenValidationParameters = new TokenValidationParameters {
+            ValidateIssuer = false, // Validate the server that issued the token
+            ValidateAudience = false, // Validate the recipient of the token
+            ValidateLifetime = false, // Validate the token's expiration
+            ValidateIssuerSigningKey = true, // Validate the signature
+            //ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            //ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+            
+        };
+        options.MapInboundClaims = false;
+        options.Events = new JwtBearerEvents {
+
+            OnMessageReceived = context =>
+            {
+                Console.WriteLine($"Token received: {context.Request.Headers.Authorization}");
+                return Task.CompletedTask;
+            },
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                return Task.CompletedTask;
+            },
+            OnTokenValidated = context =>
+            {
+                var claims = context.Principal!.Claims;
+                foreach (var claim in claims) {
+                    Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
+                }
+                Console.WriteLine("Token validated successfully.");
+                return Task.CompletedTask;
+
+            }
+        };
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminPolicy", policy => {
+        policy.RequireClaim("admin", "1");
+    });
+
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddDbContext<AppDbContext>(opt => {
     opt.UseSqlite(builder.Configuration.GetConnectionString("SqLite"))
-        //.UseSeeding((context, _) => {
-        //    context.Set<User>().AddRange(new User[] {
-        //        // test users
-        //        new User { Id = 1, UserName = "user1", Password = "password1" },
-        //        new User { Id = 2, UserName = "user2", Password = "password2" },
-        //        new User { Id = 3, UserName = "user3", Password = "password3" }
-        //    });
-
-        //    context.Set<Car>().AddRange(new Car[] {
-        //        new Car { Id = 1, Name = "Car 1", Make = "Make 1", Model = "Model 1", Year = 2010, PricePerHour = 10 },
-        //        new Car { Id = 2, Name = "Car 2", Make = "Make 2", Model = "Model 2", Year = 2015, PricePerHour = 15 },
-        //        new Car { Id = 3, Name = "Car 3", Make = "Make 3", Model = "Model 3", Year = 2020, PricePerHour = 20, RenterId = 1 }
-        //    });
-        //    context.Set<Bike>().AddRange(new Bike[] {
-        //        new Bike { Id = 4, Name = "Bike 1", Type = "Mountain", PricePerHour = 5 },
-        //        new Bike { Id = 5, Name = "Bike 2", Type = "Road", PricePerHour = 6 },
-        //        new Bike { Id = 6, Name = "Bike 3", Type = "Hybrid", PricePerHour = 7 }
-        //    });
-        //    context.Set<ElectricScooter>().AddRange(new ElectricScooter[] {
-        //        new ElectricScooter { Id = 7, Name = "Scooter 1", Range = 25, PricePerHour = 8 },
-        //        new ElectricScooter { Id = 8, Name = "Scooter 2", Range = 50, PricePerHour = 9 },
-        //        new ElectricScooter { Id = 9, Name = "Scooter 3", Range = 75, PricePerHour = 10 }
-        //    });
-        //    context.SaveChanges();
-        //})
-        ;
+        .UseSeeding((context, _) => {
+            SeedDataUtils.AddSeedData((AppDbContext)context);
+        });
 });
 
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite(builder.Configuration.GetConnectionString("SqLite")));
-// Add MediatR
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining(typeof(Program)));
+builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<Program>());
 
 var app = builder.Build();
 
-//using (var scope = app.Services.CreateScope()) {
-//    //////
-//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//    dbContext.Database.EnsureDeleted();
-//    dbContext.Database.EnsureCreated();
-
-//    var allRentalItems = dbContext.RentalItems.ToList();
-//    var allCars = dbContext.Cars.ToList();
-//    var allBikes = dbContext.Bikes.ToList();
-//    var allElectricScooters = dbContext.ElectricScooters.ToList();
-//}
+SeedDataUtils.DropCreateDB(app);
 
 app.UseDefaultFiles();
 app.MapStaticAssets();
@@ -74,9 +88,9 @@ if (app.Environment.IsDevelopment()) {
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-//buggy, context is not disposed for some reason
 //app.RegisterEndpointDefinitions(); //just a silly test with some custom endpoints
 
 app.MapControllers();

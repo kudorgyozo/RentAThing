@@ -1,0 +1,22 @@
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RentAThing.Server.Infrastructure;
+
+namespace RentAThing.Server.Application.Handlers.Commands;
+public class StopRentCommand(int userId, int itemId) : IRequest {
+    public int UserId { get; } = userId;
+    public int ItemId { get; } = itemId;
+}
+
+public class StopRentCommandHandler(AppDbContext context) : IRequestHandler<StopRentCommand> {
+    public async Task Handle(StopRentCommand request, CancellationToken cancellationToken) {
+        var item = await context.RentalItems.FirstAsync(i => i.Id == request.ItemId && i.RenterId == request.UserId, cancellationToken);
+        item.RenterId = null;
+        item.RentStart = null;
+        await context.SaveChangesAsync(cancellationToken);
+    }
+
+    //Task IRequestHandler<StopRentCommand>.Handle(StopRentCommand request, CancellationToken cancellationToken) {
+    //    throw new NotImplementedException();
+    //}
+}

@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from "./components/header/header.component";
 
 interface WeatherForecast {
     date: string;
@@ -13,6 +15,7 @@ interface WeatherForecast {
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
+    imports: [RouterOutlet, HeaderComponent]
 })
 export class AppComponent implements OnInit {
     public forecasts = signal<WeatherForecast[]>([]);
@@ -20,18 +23,18 @@ export class AppComponent implements OnInit {
     constructor(private http: HttpClient) { }
 
     ngOnInit() {
-        this.getForecasts();
+        //this.getForecasts();
     }
 
     getForecasts() {
-        this.http.get<WeatherForecast[]>('/api/weatherforecast').subscribe(
-            (result) => {
+        this.http.get<WeatherForecast[]>('/api/weatherforecast').subscribe({
+            next: (result) => {
                 this.forecasts.set(result);
             },
-            (error) => {
+            error: (error) => {
                 console.error(error);
             }
-        );
+        });
     }
 
     title = 'RentAThing.Client';

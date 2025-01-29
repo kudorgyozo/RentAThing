@@ -1,20 +1,19 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using RentAThing.Server.Handlers.Queries;
-using RentAThing.Server.Infrastructure;
+using RentAThing.Server.Application.Handlers;
+using RentAThing.Server.Application.Handlers.Queries;
 using RentAThing.Server.Models;
 
-namespace RentAThing.Server.Endpoints;
-public class RentalEndpoint : IEndpointDefinition {
+namespace RentAThing.Server.Application.Endpoints;
 
-    public string Path => "/api/rentalitems";
+//this is just some test based on nick chapsas example
+public class RentalEndpoint : IEndpointDefinition {
 
     public void DefineEndpoint(WebApplication app) {
         //TODO: how make the user add just one endpoint?
         app.Map("/api/rentalitems", GetRentalItems);
     }
 
-    public async Task<IEnumerable<RentalItem>> GetRentalItems(IMediator mediator, bool? availableOnly) {
+    public async Task<IEnumerable<ItemDto>> GetRentalItems(IMediator mediator, bool? availableOnly) {
         var resp = await mediator.Send(new GetRentalItemsQuery(availableOnly.GetValueOrDefault()));
         return resp;
     }
@@ -22,7 +21,8 @@ public class RentalEndpoint : IEndpointDefinition {
 }
 
 public interface IEndpointDefinition {
-    public string Path { get; }
+
 
     void DefineEndpoint(WebApplication app);
+
 }

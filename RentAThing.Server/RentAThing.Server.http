@@ -1,6 +1,15 @@
-@RentAThing.Server_HostAddress = http://localhost:5028
+@RentAThing.Server_HostAddress = https://localhost:7115
 
-GET {{RentAThing.Server_HostAddress}}/weatherforecast/
-Accept: application/json
 
 ###
+
+POST {{RentAThing.Server_HostAddress}}/api/user/login
+Content-Type: application/json
+
+{
+  //LoginModel
+}
+
+###
+
+

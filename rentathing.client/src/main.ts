@@ -12,6 +12,7 @@ bootstrapApplication(AppComponent, {
         provideRouter(routes),
         //importProvidersFrom(BrowserModule, AppRoutingModule),
         provideHttpClient(withInterceptorsFromDi())
+        //provideLoggingServiceConfig({ logLevel: LogLevel.Info, consoleLogOnly: true }),
     ]
 })
     .catch(err => console.error(err));
