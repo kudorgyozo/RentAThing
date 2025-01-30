@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-rent',
-    imports: [DatePipe, AsyncPipe],
+    imports: [DatePipe],
     templateUrl: './rent.component.html',
     styleUrl: './rent.component.css'
 })

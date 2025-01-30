@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { NgIf, NgFor } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./components/header/header.component";
+import { lastValueFrom } from 'rxjs';
+import { LoggingService } from './services/logging.service';
 
 interface WeatherForecast {
     date: string;
@@ -19,23 +21,25 @@ interface WeatherForecast {
 })
 export class AppComponent implements OnInit {
     public forecasts = signal<WeatherForecast[]>([]);
+    title = 'RentAThing.Client';
 
-    constructor(private http: HttpClient) { }
+    http = inject(HttpClient);
+    logging = inject(LoggingService);
+
+    constructor() { }
 
     ngOnInit() {
-        //this.getForecasts();
+        this.logging.debug('init');
+
+        this.getForecasts();
     }
 
-    getForecasts() {
-        this.http.get<WeatherForecast[]>('/api/weatherforecast').subscribe({
-            next: (result) => {
-                this.forecasts.set(result);
-            },
-            error: (error) => {
-                console.error(error);
-            }
-        });
+    async getForecasts() {
+        this.logging.debug('getforecasts');
+        const result = await lastValueFrom(this.http.get<WeatherForecast[]>('/api/weatherforecast'));
+        //console.log(result);
+        this.forecasts.set(result);
+        this.logging.debug('getforecasts result', result);
     }
 
-    title = 'RentAThing.Client';
 }

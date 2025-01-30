@@ -5,6 +5,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { firstValueFrom, throwError } from 'rxjs';
+import { LoggingService } from './logging.service';
 
 interface LoginResponse {
     token: string;
@@ -22,6 +23,7 @@ export class AuthService {
     private apiUrl = environment.apiUrl + '/user/login';
     private http = inject(HttpClient);
     private router = inject(Router);
+    private logging = inject(LoggingService);
 
     constructor() {
         const loginData = localStorage.getItem(LoginDataKey);
@@ -34,10 +36,10 @@ export class AuthService {
     }
 
     async login(username: string, password: string, redirectUrl?: string) {
-
+        this.logging.debug('login');
         try {
             const response = await firstValueFrom(this.http.post<LoginResponse>(this.apiUrl, { username, password }));
-
+            this.logging.debug('login response', response);
             // Save the token and username to localStorage
             this.username.set(response.claims['name']);
             this.token = response.token;
@@ -48,6 +50,9 @@ export class AuthService {
             }
 
         } catch (error: any) {
+            this.cleanup();
+
+            this.logging.warn('login error', error);
             let errorMessage = 'An error occurred. Please try again.';
             if (error.status === 401) {
                 errorMessage = 'Invalid credentials. Please check your username and password.';
@@ -61,6 +66,10 @@ export class AuthService {
     }
 
     logout() {
+        this.cleanup();
+    }
+
+    private cleanup() {
         this.username.set(null);
         this.token = null;
         localStorage.removeItem(LoginDataKey);

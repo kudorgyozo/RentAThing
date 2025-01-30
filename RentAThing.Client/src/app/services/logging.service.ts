@@ -33,10 +33,10 @@ export class LoggingService {
 
     constructor() {
         console.log('[LoggingService ctor]', this.logConfig);
-        this.debug('LoggingService sample debug message', { test: 'test' });
-        this.info('LoggingService sample info message', { test: 'test' });
-        this.warn('LoggingService sample warn message', { test: 'test' });
-        this.error('LoggingService sample error message', { test: 'test' });
+        // this.debug('LoggingService sample debug message', { test: 'test' });
+        // this.info('LoggingService sample info message', { test: 'test' });
+        // this.warn('LoggingService sample warn message', { test: 'test' });
+        // this.error('LoggingService sample error message', { test: 'test' });
     }
 
     debug(message: string, ...optionalParams: any[]): void {
