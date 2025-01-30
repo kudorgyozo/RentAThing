@@ -3,7 +3,7 @@ using RentAThing.Server.Application.Handlers;
 using RentAThing.Server.Application.Handlers.Queries;
 using RentAThing.Server.Models;
 
-namespace RentAThing.Server.Application.Endpoints;
+namespace RentAThing.Server.Controllers.Endpoints;
 
 //this is just some test based on nick chapsas example
 public class RentalEndpoint : IEndpointDefinition {

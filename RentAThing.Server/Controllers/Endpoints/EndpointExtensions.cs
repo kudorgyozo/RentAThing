@@ -1,4 +1,4 @@
-﻿namespace RentAThing.Server.Application.Endpoints {
+﻿namespace RentAThing.Server.Controllers.Endpoints {
     public static class EndpointExtensions {
         public static void RegisterEndpointDefinitions(this WebApplication app) {
             foreach (var endpoint in GetEndpointDefinitions()) {
