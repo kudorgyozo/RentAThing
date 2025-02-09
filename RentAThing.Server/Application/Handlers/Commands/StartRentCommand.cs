@@ -22,7 +22,8 @@ public class StartRentCommandHandler(AppDbContext context) : IRequestHandler<Sta
         context.RentHistory.Add(new RentHistory {
             ItemId = item.Id,
             RenterId = request.UserId,
-            RentStart = item.RentStart.Value
+            RentEvent = RentEvent.Start,
+            EventDate = item.RentStart.Value,
         });
         await context.SaveChangesAsync(cancellationToken);
 

@@ -10,7 +10,7 @@ public class ItemDto {
 
     public string? Renter { get; set; }
 
-    public DateTime? RentStart { get; set; }
+    public DateTimeOffset? RentStart { get; set; }
 
     public required string Type { get; set; }
 

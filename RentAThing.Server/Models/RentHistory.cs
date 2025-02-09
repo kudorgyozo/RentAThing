@@ -5,6 +5,11 @@ public class RentHistory {
     public RentalItem? Item { get; set; }
     public int RenterId { get; set; }
     public User? Renter { get; set; }
-    public DateTime RentStart { get; set; }
-    public DateTime? RentEnd { get; set; }
+    public DateTime EventDate { get; set; }
+    public RentEvent RentEvent { get; set; }
+}
+
+public enum RentEvent  {
+    Start = 1,
+    Stop = 2
 }

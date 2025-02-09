@@ -32,9 +32,17 @@ namespace RentAThing.Server.Infrastructure {
             dbContext.RentHistory.Add(new RentHistory {
                 ItemId = 1,
                 RenterId = 1,
-                RentStart = new DateTime(2021, 1, 1, 10, 0, 0),
-                RentEnd = new DateTime(2021, 1, 1, 12, 0, 0)
+                EventDate = new DateTime(2021, 1, 1, 10, 0, 0),
+                RentEvent = RentEvent.Start
             });
+
+            dbContext.RentHistory.Add(new RentHistory {
+                ItemId = 1,
+                RenterId = 1,
+                EventDate = new DateTime(2021, 1, 2, 10, 0, 0),
+                RentEvent = RentEvent.Stop
+            });
+
             dbContext.SaveChanges();
         }
 

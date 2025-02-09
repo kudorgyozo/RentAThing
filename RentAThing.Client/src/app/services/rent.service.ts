@@ -22,8 +22,10 @@ export class RentService {
 
     constructor() { }
 
-    getItems() {
-        return lastValueFrom(this.http.get<ItemDto[]>(this.apiUrl + '/rent'));
+    async getItems() {
+        let values = await lastValueFrom(this.http.get<ItemDto[]>(this.apiUrl + '/rent'));
+        return values;
+
     }
 
     startRent(id: number) {

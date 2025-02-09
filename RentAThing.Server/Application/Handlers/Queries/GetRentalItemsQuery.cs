@@ -21,7 +21,7 @@ public class GetRentalItemsQueryHandler(AppDbContext context) : IRequestHandler<
             Name = ri.Name,
             PricePerHour = ri.PricePerHour,
             Renter = ri.Renter?.UserName,
-            RentStart = ri.RentStart,
+            RentStart = ri.RentStart?.ToLocalTime(),
             Type = ri.Type
         });
 

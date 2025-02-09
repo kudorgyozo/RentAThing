@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RentAThing.Server.Application.Exceptions;
 using RentAThing.Server.Infrastructure;
+using RentAThing.Server.Models;
 
 namespace RentAThing.Server.Application.Handlers.Commands;
 public class StopRentCommand(int userId, int itemId) : IRequest {
@@ -18,8 +19,13 @@ public class StopRentCommandHandler(AppDbContext context) : IRequestHandler<Stop
         item.RenterId = null;
         item.RentStart = null;
 
-        var history = context.RentHistory.First(h => h.RenterId == request.UserId && h.ItemId == request.ItemId);
-        history.RentEnd = DateTime.UtcNow;
+        var history = new RentHistory() {
+            RenterId = request.UserId,
+            ItemId = request.ItemId,
+            EventDate = DateTime.UtcNow,
+            RentEvent = RentEvent.Stop
+        };
+        context.RentHistory.Add(history);
 
         await context.SaveChangesAsync(cancellationToken);
     }
