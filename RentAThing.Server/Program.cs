@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using RentAThing.Server.Application.Interfaces;
 using RentAThing.Server.Application.Services;
 using RentAThing.Server.Infrastructure;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,8 +13,7 @@ IdentityModelEventSource.ShowPII = true;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers(options =>
-{
+builder.Services.AddControllers(options => {
     options.Filters.Add<GlobalExceptionFilter>(); // Add the global exception filter
 });
 builder.Services.AddOpenApi();
@@ -22,30 +22,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         var key = builder.Configuration["Jwt:Key"]!;
 
         options.TokenValidationParameters = new TokenValidationParameters {
-            ValidateIssuer = false, // Validate the server that issued the token
-            ValidateAudience = false, // Validate the recipient of the token
-            ValidateLifetime = false, // Validate the token's expiration
+            ValidateIssuer = true, // Validate the server that issued the token
+            ValidateAudience = true, // Validate the recipient of the token
+            ValidateLifetime = true, // Validate the token's expiration
             ValidateIssuerSigningKey = true, // Validate the signature
-            //ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            //ValidAudience = builder.Configuration["Jwt:Audience"],
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
-            
+
         };
         options.MapInboundClaims = false;
         options.Events = new JwtBearerEvents {
 
-            OnMessageReceived = context =>
-            {
+            OnMessageReceived = context => {
                 Console.WriteLine($"Token received: {context.Request.Headers.Authorization}");
                 return Task.CompletedTask;
             },
-            OnAuthenticationFailed = context =>
-            {
+            OnAuthenticationFailed = context => {
                 Console.WriteLine($"Authentication failed: {context.Exception.Message}");
                 return Task.CompletedTask;
             },
-            OnTokenValidated = context =>
-            {
+            OnTokenValidated = context => {
                 var claims = context.Principal!.Claims;
                 foreach (var claim in claims) {
                     Console.WriteLine($"Claim: {claim.Type} = {claim.Value}");
@@ -62,7 +59,6 @@ builder.Services.AddAuthorizationBuilder()
         policy.RequireClaim("admin", "1");
     });
 
-builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddDbContext<AppDbContext>(opt => {
     opt.UseSqlite(builder.Configuration.GetConnectionString("SqLite"))
@@ -71,8 +67,14 @@ builder.Services.AddDbContext<AppDbContext>(opt => {
         });
 });
 
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite(builder.Configuration.GetConnectionString("SqLite")));
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<Program>());
+//builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite(builder.Configuration.GetConnectionString("SqLite")));
+builder.Services.AddMediatR(x => {
+    x.RegisterServicesFromAssemblyContaining<Program>();
+    //x.Lifetime = ServiceLifetime.Scoped;
+});
+
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<IRentRepo, RentRepo>();
 
 var app = builder.Build();
 

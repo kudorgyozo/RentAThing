@@ -1,8 +1,5 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using RentAThing.Server.Application.Exceptions;
-using RentAThing.Server.Infrastructure;
-using RentAThing.Server.Models;
+using RentAThing.Server.Application.Interfaces;
 
 namespace RentAThing.Server.Application.Handlers.Commands;
 public class StopRentCommand(int userId, int itemId) : IRequest {
@@ -10,27 +7,8 @@ public class StopRentCommand(int userId, int itemId) : IRequest {
     public int ItemId { get; } = itemId;
 }
 
-public class StopRentCommandHandler(AppDbContext context) : IRequestHandler<StopRentCommand> {
+public class StopRentCommandHandler(IRentRepo rentRepo) : IRequestHandler<StopRentCommand> {
     public async Task Handle(StopRentCommand request, CancellationToken cancellationToken) {
-        var item = await context.RentalItems.FirstAsync(i => i.Id == request.ItemId && i.RenterId == request.UserId, cancellationToken);
-        if (item == null) {
-            throw new RentNeverStartedException($"Rent never started. item: {request.ItemId} user: {request.UserId}");
-        }
-        item.RenterId = null;
-        item.RentStart = null;
-
-        var history = new RentHistory() {
-            RenterId = request.UserId,
-            ItemId = request.ItemId,
-            EventDate = DateTime.UtcNow,
-            RentEvent = RentEvent.Stop
-        };
-        context.RentHistory.Add(history);
-
-        await context.SaveChangesAsync(cancellationToken);
+        await rentRepo.StopRent(request.UserId, request.ItemId, cancellationToken);
     }
-
-    //Task IRequestHandler<StopRentCommand>.Handle(StopRentCommand request, CancellationToken cancellationToken) {
-    //    throw new NotImplementedException();
-    //}
 }

@@ -2,7 +2,7 @@
 using RentAThing.Server.Models;
 
 namespace RentAThing.Server.Infrastructure; 
-public class AppDbContext : DbContext {
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options) {
 
     public DbSet<RentalItem> RentalItems { get; set; } = null!;
 
@@ -16,10 +16,6 @@ public class AppDbContext : DbContext {
 
     public DbSet<RentHistory> RentHistory { get; set; }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options) {
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         //    modelBuilder.Entity<Category>()
         //.HasMany(c => c.Products)
@@ -32,19 +28,14 @@ public class AppDbContext : DbContext {
         //    .HasForeignKey(ri => ri.RenterId);
 
         modelBuilder.Entity<RentalItem>()
-            .HasDiscriminator<string>("Type")
-            .HasValue<Car>("Car")
-            .HasValue<Bike>("Bike")
-            .HasValue<ElectricScooter>("ElectricScooter");
+            .HasDiscriminator<ItemType>("Type")
+            .HasValue<Car>(ItemType.Car)
+            .HasValue<Bike>(ItemType.Bike)
+            .HasValue<ElectricScooter>(ItemType.ElectricScooter);
 
         modelBuilder.Entity<User>()
             .HasMany(u => u.RentalItems)
             .WithOne(ri => ri.Renter)
             .HasForeignKey(ri => ri.RenterId);
     }
-
-    public override void Dispose() {
-        base.Dispose();
-    }
-
 }

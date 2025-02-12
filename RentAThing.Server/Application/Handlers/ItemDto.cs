@@ -12,6 +12,6 @@ public class ItemDto {
 
     public DateTimeOffset? RentStart { get; set; }
 
-    public required string Type { get; set; }
+    public required ItemType Type { get; set; }
 
 }

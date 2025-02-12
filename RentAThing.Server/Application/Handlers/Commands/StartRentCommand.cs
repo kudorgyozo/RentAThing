@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RentAThing.Server.Application.Exceptions;
+using RentAThing.Server.Application.Interfaces;
 using RentAThing.Server.Infrastructure;
 using RentAThing.Server.Models;
 
@@ -11,21 +12,9 @@ public class StartRentCommand(int userId, int itemId) : IRequest {
     public int ItemId { get; } = itemId;
 }
 
-public class StartRentCommandHandler(AppDbContext context) : IRequestHandler<StartRentCommand> {
+public class StartRentCommandHandler(IRentRepo rentRepo) : IRequestHandler<StartRentCommand> {
     public async Task Handle(StartRentCommand request, CancellationToken cancellationToken) {
-        var item = await context.RentalItems.FirstAsync(i => i.Id == request.ItemId, cancellationToken);
-        if (item.RenterId != null) {
-            throw new RentAlreadyStartedException($"Rent already started: user: {item.RenterId} start: {item.RentStart}", null);
-        }
-        item.RenterId = request.UserId;
-        item.RentStart = DateTime.UtcNow;
-        context.RentHistory.Add(new RentHistory {
-            ItemId = item.Id,
-            RenterId = request.UserId,
-            RentEvent = RentEvent.Start,
-            EventDate = item.RentStart.Value,
-        });
-        await context.SaveChangesAsync(cancellationToken);
+        await rentRepo.StartRent(request.UserId, request.ItemId, cancellationToken);
 
     }
 

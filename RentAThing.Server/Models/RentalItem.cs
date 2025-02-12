@@ -6,7 +6,7 @@ public abstract class RentalItem {
 
     public decimal PricePerHour { get; set; }
 
-    public required string Type { get; set; }
+    public required ItemType Type { get; set; }
 
     public int? RenterId { get; set; }
 
@@ -14,10 +14,17 @@ public abstract class RentalItem {
 
     public DateTime? RentStart { get; set; }
 
-    public ICollection<RentHistory> History { get; set; } = new List<RentHistory>();
+    public ICollection<RentHistory> History { get; set; } = [];
 
 
 }
+
+public enum ItemType {
+    Car = 1,
+    Bike,
+    ElectricScooter
+}
+
 
 public class Car : RentalItem {
 

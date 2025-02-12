@@ -10,41 +10,71 @@ import { LoggingService } from './logging.service';
 interface LoginResponse {
     token: string;
     claims: Record<string, string>;
+    expires: number;
+}
+
+interface LoginData {
+    token: string;
+    username: string;
+    expires: number;
 }
 
 const LoginDataKey = 'loginData';
+const apiUrl = environment.apiUrl + '/user/login';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
-    token: string | null = null;
     username = signal<string | null>(null);
+    token?: string;
 
-    private apiUrl = environment.apiUrl + '/user/login';
     private http = inject(HttpClient);
     private router = inject(Router);
     private logging = inject(LoggingService);
 
     constructor() {
-        const loginData = localStorage.getItem(LoginDataKey);
-        if (loginData) {
-            const { token, username } = JSON.parse(loginData);
+        const loginDataStr = localStorage.getItem(LoginDataKey);
+        if (loginDataStr) {
+            const { token, username, expires } = JSON.parse(loginDataStr);
+            const now = new Date();
+            const expireDate = new Date(expires * 1000);
+            if (now > expireDate) {
+                this.cleanup();
+                return;
+            }
+
+            this.scheduleLogout(expireDate);
+
             this.username.set(username);
             this.token = token;
         }
 
     }
 
+    private scheduleLogout(expireDate: Date) {
+        const delayms = expireDate.getTime() - (new Date().getTime());
+        setTimeout(() => {
+            this.logging.debug('Automatic logout, token expired')
+            this.cleanup();
+        }, delayms);
+    }
+
     async login(username: string, password: string, redirectUrl?: string) {
         this.logging.debug('login');
         try {
-            const response = await firstValueFrom(this.http.post<LoginResponse>(this.apiUrl, { username, password }));
+            const response = await firstValueFrom(this.http.post<LoginResponse>(apiUrl, { username, password }));
             this.logging.debug('login response', response);
             // Save the token and username to localStorage
             this.username.set(response.claims['name']);
             this.token = response.token;
 
-            localStorage.setItem(LoginDataKey, JSON.stringify({ token: response.token, username: response.claims['name'] }));
+            const loginData: LoginData = {
+                token: response.token, username: response.claims['name'], expires: response.expires
+            }
+            localStorage.setItem(LoginDataKey, JSON.stringify(loginData));
+
+            this.scheduleLogout(new Date(response.expires * 1000));
+
             if (redirectUrl) {
                 this.router.navigate([redirectUrl]);
             }
@@ -71,7 +101,7 @@ export class AuthService {
 
     private cleanup() {
         this.username.set(null);
-        this.token = null;
+        this.token = undefined;
         localStorage.removeItem(LoginDataKey);
     }
 }

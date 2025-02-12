@@ -9,7 +9,13 @@ export interface ItemDto {
     pricePerHour: number;
     renter?: string;
     rentStart?: string; // UTC date string
-    type: string;
+    type: ItemType;
+}
+
+export enum ItemType {
+    Car = 1,
+    Bike,
+    ElectricScooter
 }
 
 @Injectable({
@@ -25,7 +31,11 @@ export class RentService {
     async getItems() {
         let values = await lastValueFrom(this.http.get<ItemDto[]>(this.apiUrl + '/rent'));
         return values;
+    }
 
+    async getActiveItems() {
+        let values = await lastValueFrom(this.http.get<ItemDto[]>(this.apiUrl + '/profile/items/active'));
+        return values;
     }
 
     startRent(id: number) {

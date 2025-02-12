@@ -11,6 +11,14 @@
                 >
             </li>
             <li>
+                <a
+                    routerLink="profile"
+                    routerLinkActive="text-blue-500"
+                    class="hover:text-blue-500"
+                    >Profile</a
+                >
+            </li>
+            <li>
                 @if (!authService.username()) {
                 <a
                     routerLink="login"
