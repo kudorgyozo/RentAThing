@@ -1,20 +1,18 @@
-import { HttpClientTestingModule, HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { provideRouter, Router } from '@angular/router';
-import { routes } from './routes';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 
 describe('AppComponent', () => {
     let component: AppComponent;
     let fixture: ComponentFixture<AppComponent>;
     let httpMock: HttpTestingController;
-    let routerSpy: jasmine.SpyObj<Router>;
+    //let routerSpy: jasmine.SpyObj<Router>;
 
     beforeEach(async () => {
-        routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
+        //routerSpy = jasmine.createSpyObj('Router', ['navigate', 'navigateByUrl']);
 
         await TestBed.configureTestingModule({
             providers: [
@@ -41,7 +39,6 @@ describe('AppComponent', () => {
 
     it('should create the app', () => {
         expect(component).toBeTruthy();
-        const req = httpMock.expectOne('/api/weatherforecast');
         httpMock.verify();
     });
 

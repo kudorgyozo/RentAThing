@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeComponent } from './home.component';
-import { Component, NO_ERRORS_SCHEMA, provideExperimentalZonelessChangeDetection } from '@angular/core';
+import { Component, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { RentComponent } from '../../components/rent/rent.component';
 import { provideRouter } from '@angular/router';
 //import { RentComponent } from '../../components/rent/rent.component';
@@ -11,7 +11,7 @@ import { provideRouter } from '@angular/router';
     template: ``,
     standalone: true,
 })
-class RentComponentMock { }
+class RentMockComponent { }
 
 // @Component({
 //     selector: 'app-rent',
@@ -26,7 +26,7 @@ describe('HomeComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [HomeComponent, RentComponentMock],
+            imports: [HomeComponent, RentMockComponent],
 
             providers: [
                 provideExperimentalZonelessChangeDetection(),
@@ -36,7 +36,7 @@ describe('HomeComponent', () => {
         })
             .overrideComponent(HomeComponent, {
                 remove: { imports: [RentComponent] },
-                add: { imports: [RentComponentMock] }
+                add: { imports: [RentMockComponent] }
             })
             .compileComponents();
 

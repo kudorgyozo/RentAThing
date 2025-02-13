@@ -1,4 +1,4 @@
-import { inject, Injectable, InjectFlags, InjectionToken } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 
 export const LoggingServiceConfigToken = new InjectionToken<LoggingServiceConfig>('LoggingServiceConfig');
 

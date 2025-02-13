@@ -1,6 +1,6 @@
 // token.interceptor.ts
 import { inject } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { catchError } from 'rxjs/operators';
@@ -10,7 +10,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, n
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    let token = authService.token;
+    const token = authService.token;
 
     if (token) {
         // Clone the request and add the Authorization header

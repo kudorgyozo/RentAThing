@@ -1,6 +1,6 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError, lastValueFrom, Observable, throwError } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface ItemDto {
@@ -26,15 +26,13 @@ export class RentService {
     private apiUrl = environment.apiUrl;  // Replace with your actual API URL
     http = inject(HttpClient);
 
-    constructor() { }
-
     async getItems() {
-        let values = await lastValueFrom(this.http.get<ItemDto[]>(this.apiUrl + '/rent'));
+        const values = await lastValueFrom(this.http.get<ItemDto[]>(this.apiUrl + '/rent'));
         return values;
     }
 
     async getActiveItems() {
-        let values = await lastValueFrom(this.http.get<ItemDto[]>(this.apiUrl + '/profile/items/active'));
+        const values = await lastValueFrom(this.http.get<ItemDto[]>(this.apiUrl + '/profile/items/active'));
         return values;
     }
 

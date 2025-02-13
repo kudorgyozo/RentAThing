@@ -24,8 +24,4 @@ export class ProfileComponent {
         await this.rentService.stopRent(id);
         this.items.set(await this.rentService.getActiveItems());
     }
-
-    startRent(id: number) {
-
-    }
 }

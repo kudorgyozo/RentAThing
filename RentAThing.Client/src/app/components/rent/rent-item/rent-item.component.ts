@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Input, output, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ItemDto, ItemType } from '../../../services/rent.service';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';

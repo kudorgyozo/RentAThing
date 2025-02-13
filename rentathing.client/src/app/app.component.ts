@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { NgIf, NgFor } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./components/header/header.component";
 import { lastValueFrom } from 'rxjs';
@@ -25,8 +24,6 @@ export class AppComponent implements OnInit {
 
     http = inject(HttpClient);
     logging = inject(LoggingService);
-
-    constructor() { }
 
     ngOnInit() {
         this.logging.debug('init');

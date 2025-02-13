@@ -1,10 +1,9 @@
 // auth.service.ts
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
-import { firstValueFrom, throwError } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { LoggingService } from './logging.service';
 
 interface LoginResponse {
@@ -79,14 +78,14 @@ export class AuthService {
                 this.router.navigate([redirectUrl]);
             }
 
-        } catch (error: any) {
+        } catch (error: unknown) {
             this.cleanup();
 
             this.logging.warn('login error', error);
             let errorMessage = 'An error occurred. Please try again.';
-            if (error.status === 401) {
+            if (error instanceof HttpErrorResponse && error.status === 401) {
                 errorMessage = 'Invalid credentials. Please check your username and password.';
-            } else if (error.status === 500) {
+            } else if (error instanceof HttpErrorResponse && error.status === 500) {
                 errorMessage = 'Server error. Please try again later.';
             }
 

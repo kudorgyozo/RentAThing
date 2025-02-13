@@ -1,5 +1,5 @@
 
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
     imports: [ReactiveFormsModule],
     styleUrl: './login.component.css'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
     loginForm: FormGroup;
 
@@ -27,9 +27,6 @@ export class LoginComponent implements OnInit {
             password: ['', Validators.required]
         });
 
-    }
-
-    ngOnInit(): void {
     }
 
     get username() {
