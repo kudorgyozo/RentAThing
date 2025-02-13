@@ -1,5 +1,7 @@
 <ul class="pt-2 space-y-4">
     @for (item of items(); track item.id) {
     <li app-rent-item [item]="item" (stopRent)="stopRent($event)"></li>
+    } @empty {
+    <li>Nothing here</li>
     }
 </ul>

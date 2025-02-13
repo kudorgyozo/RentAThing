@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { ItemDto, RentService } from '../../services/rent.service';
 import { RentItemComponent } from '../../components/rent/rent-item/rent-item.component';
@@ -9,7 +9,7 @@ import { RentItemComponent } from '../../components/rent/rent-item/rent-item.com
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.css'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
 
 
     authService = inject(AuthService);
