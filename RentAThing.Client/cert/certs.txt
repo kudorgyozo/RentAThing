@@ -1,0 +1,1 @@
+dotnet dev-certs https --export-path .\cert.pem --format Pem --no-password -t

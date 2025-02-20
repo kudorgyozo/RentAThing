@@ -37,7 +37,7 @@ describe('AuthService', () => {
 
         const promise = service.login(username, password);
 
-        const req = httpMock.expectOne('https://localhost:57024/api/user/login')
+        const req = httpMock.expectOne('/api/user/login')
         req.flush({
             token: 'mock-token',
             claims: {
@@ -57,7 +57,7 @@ describe('AuthService', () => {
 
         const promise = service.login(username, password);
 
-        const req = httpMock.expectOne('https://localhost:57024/api/user/login');
+        const req = httpMock.expectOne('/api/user/login');
         req.flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
 
         await expectAsync(promise)

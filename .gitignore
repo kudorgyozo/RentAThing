@@ -364,3 +364,7 @@ FodyWeavers.xsd
 /RentAThing.Server/app.db
 /RentAThing.Server/app.db-shm
 /RentAThing.Server/app.db-wal
+
+/rentathing.client/cert/*.key
+/rentathing.client/cert/*.pem
+/RentAThing.Server/wwwroot

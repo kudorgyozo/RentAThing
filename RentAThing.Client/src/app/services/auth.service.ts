@@ -42,7 +42,7 @@ export class AuthService {
                 return;
             }
 
-            this.scheduleLogout(expireDate);
+            //this.scheduleLogout(expireDate);
 
             this.username.set(username);
             this.token = token;
@@ -72,7 +72,7 @@ export class AuthService {
             }
             localStorage.setItem(LoginDataKey, JSON.stringify(loginData));
 
-            this.scheduleLogout(new Date(response.expires * 1000));
+            //this.scheduleLogout(new Date(response.expires * 1000));
 
             if (redirectUrl) {
                 this.router.navigate([redirectUrl]);
