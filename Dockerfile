@@ -14,7 +14,7 @@ COPY RentAThing.Client/ .
 
 # Build the Angular app
 RUN pnpm run build
-RUN ls 
+
 
 # Stage 2: Build the .NET API
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS backend-build
@@ -22,15 +22,15 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS backend-build
 # Set the working directory
 WORKDIR /src
 
-# Copy the backend source code
-COPY RentAThing.Server/. .
+# Optimization? Copy csproj only first and restore
+COPY RentAThing.Server/RentAThing.Server.csproj .
+RUN dotnet restore
 
+COPY RentAThing.Server/ .
 # Copy the built Angular app to the wwwroot folder of the API
 COPY --from=frontend-build /app/dist/ ./wwwroot
 
-# Restore and publish the .NET app
-# WORKDIR /src/Backend
-RUN dotnet restore
+#RUN dotnet build -c Release -o /app/build
 RUN dotnet publish -c Release -o /app/publish
 
 # Stage 3: Run the .NET API
