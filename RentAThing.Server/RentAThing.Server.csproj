@@ -31,22 +31,4 @@
 	<ItemGroup>
 	  <Folder Include="wwwroot\" />
 	</ItemGroup>
-
-	<Target Name="BuildFrontend" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
-		<!-- Set the working directory to your frontend project folder -->
-		<!-- Navigate to the frontend directory -->
-		<!--<Exec Command="cd ../RentAThing.Client" />-->
-		<!-- Install dependencies -->
-		<Exec Command="pnpm install" WorkingDirectory="../RentAThing.Client" />
-
-		<!-- Build the frontend -->
-		<Exec Command="pnpm run build:dev" WorkingDirectory="../RentAThing.Client" />
-
-		<!-- Copy the build output to wwwroot -->
-		<!--<ItemGroup>
-			<DistFiles Include="../RentAThing.Client/Readme.md" />
-		</ItemGroup>
-		<Copy SourceFiles="@(DistFiles)" DestinationFolder="wwwroot\%(RecursiveDir)" />-->
-	</Target>
-
 </Project>

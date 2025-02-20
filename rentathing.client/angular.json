@@ -36,7 +36,11 @@
                         "styles": [
                             "src/styles.css"
                         ],
-                        "scripts": []
+                        "scripts": [],
+                        "outputPath": {
+                            "base": "dist",
+                            "browser": ""
+                        }
                     },
                     "configurations": {
                         "production": {
@@ -52,11 +56,7 @@
                                     "maximumError": "8kB"
                                 }
                             ],
-                            "outputHashing": "all",
-                            "outputPath": {
-                                "base": "dist",
-                                "browser": ""
-                            }
+                            "outputHashing": "all"
                         },
                         "development": {
                             "optimization": false,
@@ -67,11 +67,7 @@
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.dev.ts"
                                 }
-                            ],
-                            "outputPath": {
-                                "base": "../RentAThing.Server/wwwroot",
-                                "browser": ""
-                            }
+                            ]
                         }
                     },
                     "defaultConfiguration": "production"

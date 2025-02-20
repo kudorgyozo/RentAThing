@@ -81,8 +81,10 @@ var app = builder.Build();
 
 SeedDataUtils.DropCreateDB(app);
 
-app.UseDefaultFiles();
-app.MapStaticAssets();
+if (!app.Environment.IsDevelopment()) {
+    app.UseDefaultFiles();
+    app.MapStaticAssets();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
@@ -98,7 +100,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapFallbackToFile("/index.html");
+if (!app.Environment.IsDevelopment()) {
+    app.MapFallbackToFile("/index.html");
+}
 
 app.Run();
-

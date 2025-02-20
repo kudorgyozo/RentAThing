@@ -22,7 +22,7 @@ public class TokenService(IConfiguration configuration) {
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         //var expires = DateTimeOffset.UtcNow.AddHours(2);
-        var expires = DateTimeOffset.UtcNow.AddSeconds(10);
+        var expires = DateTimeOffset.UtcNow.AddSeconds(15);
         var token = new JwtSecurityToken(
             issuer: configuration["Jwt:Issuer"],
             audience: configuration["Jwt:Audience"],
