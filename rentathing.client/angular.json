@@ -23,10 +23,6 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": {
-                            "base": "../RentAThing.Server/wwwroot",
-                            "browser": ""
-                        },
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": [],
@@ -56,7 +52,11 @@
                                     "maximumError": "8kB"
                                 }
                             ],
-                            "outputHashing": "all"
+                            "outputHashing": "all",
+                            "outputPath": {
+                                "base": "dist",
+                                "browser": ""
+                            }
                         },
                         "development": {
                             "optimization": false,
@@ -67,7 +67,11 @@
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.dev.ts"
                                 }
-                            ]
+                            ],
+                            "outputPath": {
+                                "base": "../RentAThing.Server/wwwroot",
+                                "browser": ""
+                            }
                         }
                     },
                     "defaultConfiguration": "production"

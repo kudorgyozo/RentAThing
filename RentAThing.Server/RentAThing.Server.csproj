@@ -28,6 +28,10 @@
 		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.3.1" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="wwwroot\" />
+	</ItemGroup>
+
 	<Target Name="BuildFrontend" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
 		<!-- Set the working directory to your frontend project folder -->
 		<!-- Navigate to the frontend directory -->
@@ -36,7 +40,7 @@
 		<Exec Command="pnpm install" WorkingDirectory="../RentAThing.Client" />
 
 		<!-- Build the frontend -->
-		<Exec Command="pnpm run build" WorkingDirectory="../RentAThing.Client" />
+		<Exec Command="pnpm run build:dev" WorkingDirectory="../RentAThing.Client" />
 
 		<!-- Copy the build output to wwwroot -->
 		<!--<ItemGroup>
