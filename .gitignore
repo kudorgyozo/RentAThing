@@ -367,4 +367,3 @@ FodyWeavers.xsd
 
 /rentathing.client/cert/*.key
 /rentathing.client/cert/*.pem
-/RentAThing.Server/wwwroot
